@@ -110,7 +110,7 @@
     .header nav a:hover {
       text-decoration: underline;
     }
-    
+
     h1 {
       color: red;
       text-align: center;
@@ -131,7 +131,7 @@
       font-size: 3rem;
       background-color: orange;
     }
-    
+
     h4 {
       color: yellow;
       text-align: center;
@@ -141,7 +141,7 @@
     .container {
       padding: 20px;
     }
-    
+
     .centerimage {
       display: block;
       margin-left: auto;
@@ -207,21 +207,101 @@
     .suggestion-item:hover {
       background-color: #f0faff;
     }
-    
-    footer {
-  text-align: center;
-  padding: 20px;
-  background: linear-gradient(135deg, #ffcccc, #cce6ff);
-  color: #2c3e50;
-  font-size: 16px;
-  font-weight: bold;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
-  margin-top: 20px;
-}
 
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #ffcccc, #cce6ff);
+      color: #2c3e50;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+      margin-top: 20px;
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        padding: 15px;
+      }
+
+      .block-card {
+        padding: 10px;
+      }
+
+      .block-card img {
+        height: 100px;
+      }
+
+      .header nav {
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .header img {
+        height: 40px;
+      }
+
+      .search-input {
+        width: 150px;
+      }
+
+      h1, h2, h3, h4 {
+        font-size: 2rem;
+      }
+
+      .img_deg {
+        float: none;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      .pos_cen {
+        width: 95%;
+        margin: 0 2.5%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: 1fr;
+        padding: 10px;
+      }
+
+      .block-card {
+        padding: 8px;
+      }
+
+      .block-card img {
+        height: 80px;
+      }
+
+      .header nav {
+        gap: 3px;
+      }
+
+      .header img {
+        height: 30px;
+      }
+
+      .search-input {
+        width: 120px;
+      }
+
+      h1, h2, h3, h4 {
+        font-size: 1.5rem;
+      }
+
+      .pos_cen {
+        width: 98%;
+        margin: 0 1%;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Rest of your HTML code remains the same -->
   <header class="header">
     <div class="logo">
       <img src="logo.jpg" alt="Logo">
@@ -240,31 +320,31 @@
       <a href="#FOOD STALLS">FOOD STALLS</a>
       <a href="#PARKING">PARKING</a>
       <a href="#CONTACT US">CONTACT US</a>
-      
+
     </nav>
   </header>
 
   <h1 align="center">WELCOME TO GGU MAPS!</h1>
-  <video controls loop autoplay width="1450" height="350" align="center">
-    <source src="gguv.mp4">
+  <video controls loop autoplay width="100%" height="auto" align="center">
+    <source src="assets/gguv.mp4">
   </video>
   <br><br><br><br>
 
   <marquee bgcolor="#f2f3f2" scrollamount="33" height="100">
-    <img width="1500px" height="100" src="brands.jpg">
+    <img width="100%" height="100" src="brands.jpg">
   </marquee>
   <br><br><br><br>
 
   <div id="TELUGU MAHASABALU">
-    <marquee scrollamount="30" height="60" width="1500" bgcolor="red">
+    <marquee scrollamount="30" height="60" width="100%" bgcolor="red">
       <font size="30" color="white">
         <b>WELCOME TO TELUGU MAHASABALU!</b>
       </font>
     </marquee>
     <br><br>
-    <img src="tms.jpg" width="700" height="600" border="1" class="centerimage">
+    <img src="tms.jpg" width="100%" height="auto" border="1" class="centerimage">
     <br><br>
-    <marquee scrollamount="25" height="30" width="1500" bgcolor="red">
+    <marquee scrollamount="25" height="30" width="100%" bgcolor="red">
       <font size="5" color="yellow">
         <b>CLICK ON BELOW BUTTON FOR TELUGU MAHASABALU! LOCATION</b>
       </font>
@@ -392,7 +472,7 @@ MICROWAVE & OPTICAL COMMUNICATION LAB (MB118)
 <span style="color: red;">3RD STAIRS LEFT SIDE;</span>
 RESEARCH CENTER/ CENTER FOR IOT (MB119/118)
 COMMUNICATION LAB (MV209/MB119)
-<span style="color:BROWN;">DEPARTMENT OF CSE DATA SCIENCE (Dr.p.sri ram chandra)</span>(MB120)  
+<span style="color:BROWN;">DEPARTMENT OF CSE DATA SCIENCE (Dr.p.sri ram chandra)</span>(MB120)
 STAFF ROOM (MB221)
 <span style="color: red;">CONNECTION TO VB BLOCK FROM (MV 209)</span>
 
@@ -421,17 +501,17 @@ MB-212,226
 
 <b>MAIN BLOCK 3RD FLOOR </b>
 <span style="color: red;">1ST STAIRS RIGHT SIDE:</span>
-STAFF ROOM 
+STAFF ROOM
 <span style="color:BROWN;">DEPARTMENT OF MECHANICAL-HOD (DR.E.NIRMALA DEVI) (MB305)</span>
 LIBRARY (MB304)
 (MB-DH-1-303)
 (MB-DH-2-302)
 (MB-DH-1-301)
 MB-300
-MALE REST ROOM 
+MALE REST ROOM
 <span style="color: red;">1ST STAIRS LEFT SIDE:</span>
-STAFF ROOM 
-MB-301,302MECHANICAL DEPARTMENT RESEARCH CENTER 
+STAFF ROOM
+MB-301,302MECHANICAL DEPARTMENT RESEARCH CENTER
 FEMALE REST ROOM
 MB-303,304,305
 2ND STARIS RIGHT SIDE ABOVE DATA
@@ -467,7 +547,7 @@ BETWEEN GROUND FLOOR AND 1ST FLOOR; LEARNING AND DEVELOPMENT(VB)
 <span style="color: red;">STAIRS RIGHT SIDE;</span>
 1.VB SEMINAR HALL
 2.BOARD ROOM (VB102)
-INFORNT OF STAIRS GGU VIEW 
+INFORNT OF STAIRS GGU VIEW
 <span style="color: red;">STAIRS LEFT SIDE:</span>
 <span style="color:BROWN;">3.HOD -LEARNING & DEVELOPMENT SHRIJA MADHU (VB109/104)</span>
 DRINKING WATER
@@ -516,7 +596,7 @@ CAO HOSTELS (APJ01)
 <b>AK 1ST FLOOR </b><br>
 <span style="color: red;">STAIRS RIGHT SIDE:</span>
 MINING ENGINEERING
-CLASS ROOMS 
+CLASS ROOMS
 <span style="color: red;">STAIRS LEFT SIDE:</span>
 DEPT OF MINING ENG STAFF ROOM (ABJ101A)
 COMPUTER APPLICATIONS IN MINING ( APJ-102,303 & APJ-306/307/ABJ102A)
@@ -533,7 +613,7 @@ ABJ-206/2051
 APJ-207/2061
 FEMALE RESTROOM
 
-<b>AK 3RD FLOOR</b> 
+<b>AK 3RD FLOOR</b>
 <span style="color: red;">STAIRS RIGHT SIDE </span>
 PETROLEUM ENGINEERING DEPARTMENT
 CLASSROOMS APJ-403,402,
@@ -555,10 +635,10 @@ REST ROOM<br>
     <textarea id="ggupharmacyblock-data" style="display:none;">
 <b>GGU PHARMACY BLOCK</b>
 <a href="https://maps.app.goo.gl/Mx1W7qifHQQMo73RA" target="_blank"><input type="button" name=" CLICK HERE FOR GGU PHARMACY BLOCK LOCATION " value=" CLICK HERE FOR GGU PHARMACY BLOCK LOCATION "></a>
-<br><b>GROUND FLOOR </b> 
+<br><b>GROUND FLOOR </b>
 <span style="color: red;">STAIRS RIGHT SIDE:</span>
-LECTURE HALL 01 
-LECTURE HALL 02 
+LECTURE HALL 01
+LECTURE HALL 02
 STORE ROOM
 MACHINE ROOM
 LECTURE HALL 03
@@ -567,7 +647,7 @@ ADMINISTRATIVE OFFICE
 CONFRENCE HALL
 ANIMAL HOUSE
 STAIRS
-CANTEEN  
+CANTEEN
 
 <b>FIRST FLOOR </b>
 <span style="color: red;">STAIRS RIGHT SIDE:</span>
@@ -598,7 +678,7 @@ IQAC(INTERNAL QUALITY ASSURANCE CELL
 PHARMACOLOGY LAB#1
 PHARMACOLOGY LAB#2
 <span style="color: red;">STARIS LEFT SIDE</span>
-VICE PRINCIPAL OFFICE 
+VICE PRINCIPAL OFFICE
 PHARMACOGNOSY LAB
 GIRLS COMMON ROOM
 LECTURE HALL 14
@@ -627,7 +707,7 @@ NCC UNIT RK004
 2ND STARIS LEFT SIDE ABOVE DATA
 <span style="color: red;">2ND STAIRS RIGHT SIDE:</span>
 HOD FRESHMAN ENG DEPT
-DRINKING WATER 
+DRINKING WATER
 CHEMISTRY LAB
 MALE REST ROOMS
 FACULTY ROOM
@@ -655,7 +735,7 @@ COMPUTER LAB-1 (RK111-114)
 
 <b>RK BLOCK SECOND FLOOR:</b>
 <span style="color: red;">1ST STAIR RIGHT SIDE:</span>
-UNDER CONTRUCTION 
+UNDER CONTRUCTION
 <span style="color: red;">1ST STAIR LEFT SIDE:</span>
 RK SF-201, RK SF-202,RK SF-203,RK SF-204,RK SF-205,
 RK SF-206,RK SF-207,RK SF-208,RK SF-209,RK SF-210.
@@ -681,7 +761,7 @@ RKTF-310,311,312,313,314,315
 <span style="color: red;">3RD STAIRS RIGHT SIDE:</span>
 RKTF-317,318,319,320
 <span style="color: red;">3RD STAIRS LEFT SIDE:</span>
-UNDER CONSTRUCTION 
+UNDER CONSTRUCTION
 
 <h4>NAVIGATIONS</h4>
 <a href="https://maps.app.goo.gl/ZTrS28FCojSh6bXo9" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU MAIN BLOCK" value="GGU RK BLOCK TO GGU MAIN BLOCK "></a>
@@ -702,7 +782,7 @@ ADMINISTRATIVE OFFICE (103)
 EXAMINATION SECTION (102)
 STAFF TOILETS(101)
 <span style="color: red;">STAIRS RIGHT SIDE :</span>
-106, COMPUTER LAB-1 (107), 
+106, COMPUTER LAB-1 (107),
 COMPUTER LAB-2 (108).109,110,111
 2ND STAIRS LEFT SIDE ABOVE DATA
 <span style="color: red;">2ND STAIRS RIGHT SIDE:</span>
@@ -724,7 +804,7 @@ SECOND YEAR CIVIL 211,
 <span style="color: red;">2ND STAIRS LEFT SIDE:</span>
 DEPARTMENT OF ECE
 ELECTRONIC CIRCUITS LAB
-ELECTRICAL WORKSHOP 
+ELECTRICAL WORKSHOP
 GIRLS TOILETS
 
 <b>POLYTECHNIC SECOND FLOOR</b>
@@ -741,7 +821,7 @@ CSE-2 309,CSE-3,
 SECOND YEAR AI 311,312
 2ND STARIS RIGHT SIDE ABOVE DATA
 <span style="color: red;">2ND STAIRS LEFT SIDE:</span>
-HBS STAFF ROOM 313, 314,315 
+HBS STAFF ROOM 313, 314,315
 GIRLS TOILETS
 
 <b>POLYTECHNIC 3RD FLOOR </b>
@@ -763,7 +843,7 @@ INFRONT OF 1ST STAIR & BESIDE OF 2ND STAIR
 <h3>LABS !</h3>MATERIAL TESTING LAB
 DRAWING HALL-3
 PHYSICS LAB
-CHEMISTRY LAB 
+CHEMISTRY LAB
 FM&HM LAB
 THERMAL ENGINEERING LAB
 
@@ -807,7 +887,7 @@ C110-C112
 <b>GEC CVRB 1ST FLOOR</b>
 <span style="color: red;">STAIRS RIGHT SIDE</span>
 <span style="color: red;">RS-</span>
-LIBRARY 
+LIBRARY
 2ND STAIRS
 <span style="color: red;">LS-</span>
 ADVANCED PROGRAMMING LAB
@@ -824,7 +904,7 @@ C202
 C203
 C204
 
-<b>GEC CVRB 2ND FLOOR</b> 
+<b>GEC CVRB 2ND FLOOR</b>
 <span style="color: red;">STAIRS RIGHT SIDE</span>
 DEPT INFORMATION TECHNOLOGY
 <span style="color: red;">RS-</span>
@@ -1002,19 +1082,19 @@ MALE TOLIET
 <h3><b>SARDHAR VALABHAI PATEL BLOCK </b></h3>
 <b>SVPB GROUND FLOOR</b>
 <span style="color: red;">STAIRS 1 LEFT SIDE :</span>
-COMPUTER LAB 
+COMPUTER LAB
 SKILL LAB
 FEMALE REST ROOMS
 <span style="color: red;">STAIRS 1 RIGHT SIDE :</span>
-CANTEEN 
-LIBRARY 
+CANTEEN
+LIBRARY
 EXAM CELL
 PLACEMENT CELL
 IQAC (INTERNAL QUALITY ASSURANCE CELL)
-STAIRS 2 
-2ND STAIRS RIGHT SIDE ABOVE DATA 
+STAIRS 2
+2ND STAIRS RIGHT SIDE ABOVE DATA
 <span style="color: red;">STAIRS 2 LEFT SIDE :</span>
-STORE ROOM 
+STORE ROOM
 MALE REST ROOMS
 
 <b>SVPB FIRST FLOOR</b>
@@ -1024,7 +1104,7 @@ MALE TOILETS
 <span style="color: red;">STAIRS 1 LEFT SIDE :</span>
 109
 108,107,106, 105,104,103
-STAIRS 2 LEFT SIDE ABOVE DATA 
+STAIRS 2 LEFT SIDE ABOVE DATA
 <span style="color: red;">STAIRS 2 RIGHT SIDE :</span>
 102, DEPARTMENT PHYSICAL EDUCATION
 101, LADIES TOLIETS
@@ -1141,10 +1221,10 @@ LADIES TOLIETS
       "CRICKET GROUND": "https://maps.app.goo.gl/3t5TLnFwSYws6Sc8A",
       "MAHASABALU GROUND": "https://maps.app.goo.gl/dx386tnSa3y3nAL29",
       "VB BESIDE STALLS": "https://maps.app.goo.gl/ZTrS28FCojSh6bXo9",
-      "FOOD COURT": "https://maps.app.goo.gl/nEQfXUJ5jkmYgNHdA",
+      "FOOD COURT": "https://maps.app.goo.gl/eghuu9Mh2ey8R5CD6",
       "YUMPPYS": "https://maps.app.goo.gl/8gtFVf7EPiycH4w56",
       "CENTRAL FOOD COURT": "https://maps.app.goo.gl/7HMD76ZX9eZkwQnK7",
-      "SPICE HUB": "https://maps.app.goo.gl/qff6kMmGDbqbBNQB9",
+      "SPICE HUB": "https://maps.app.goo.gl/2XwRsmpEiwgjX1BU9",
       "ZONE 1": "https://maps.app.goo.gl/J7swjS28esAZRTfv7",
       "ZONE 2": "https://maps.app.goo.gl/bwVTDbn3ahxmnRMp9",
       "ZONE 3": "https://maps.app.goo.gl/D18N1S2nmgrsV54Q8",
@@ -1299,7 +1379,6 @@ LADIES TOLIETS
     <br><br><br>
   </div>
 
-
   <div id="GGU_ZONES">
     <h2>ZONES</h2>
     <div class="pos_cen">
@@ -1322,10 +1401,8 @@ LADIES TOLIETS
         <a href="https://maps.app.goo.gl/R4uDZW2uXUk1viq26" target="_blank"><input type="button" name="NORTH MESS" value="NORTH MESS"></a><br>
         <a href="https://maps.app.goo.gl/57mm2dLiRJioa6se9" target="_blank"><input type="button" name="MEDUNITED CLINIC" value="MEDUNITED CLINIC"></a><br>
         <a href="https://maps.app.goo.gl/PA4vihvhomKZcWa16" target="_blank"><input type="button" name="SAI BABA TEMPLE" value=" SAI BABA TEMPLE "></a><br>
-        <a href="https://maps.app.goo.gl/Ub8iMyAVCHpQzHTUA" target="_blank"><input type="button" name="SARASWATHIDEVI TEMPLE" value=" SARASWATHIDEVI TEMPLE "></a><br>   
+        <a href="https://maps.app.goo.gl/Ub8iMyAVCHpQzHTUA" target="_blank"><input type="button" name="SARASWATHIDEVI TEMPLE" value=" SARASWATHIDEVI TEMPLE "></a><br>
         <a href="https://maps.app.goo.gl/oQKSopAgfzb51dW79" target="_blank"><input type="button" name="XEROX/STATIONARY STORE" value="XEROX/STATIONARY STORE"></a><br>
-                
-
       </p>
     </div>
     <br><br><br>
