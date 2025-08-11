@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GGU MAPS</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: white;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(45deg, #2c3e50, #3498db);
+      color: #fff;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 30px;
+    }
+    .block-card {
+      background: linear-gradient(135deg, #e6f0ff, #ffffff);
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .block-card:hover {
+      transform: scale(1.03);
+      background: linear-gradient(135deg, #f0faff, #d0eaff);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+    }
+    .block-card img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    #blockModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #modalContent {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 14px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+    }
+    #closeBtn {
+      float: right;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: bold;
+      color: #888;
+    }
+    #closeBtn:hover {
+      color: #e74c3c;
+    }
+    pre, #modalInfo {
+      white-space: pre-wrap;
+      font-family: 'Segoe UI', sans-serif;
+      color: #2c3e50;
+    }
+    b {
+      color: #1a237e;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+    }
+    .header img {
+      height: 50px;
+    }
+    .header nav {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .header nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    .header nav a:hover {
+      text-decoration: underline;
+    }
+    
+    h1 {
+      color: red;
+      text-align: center;
+      font-size: 3rem;
+      background-color: skyblue;
+    }
+
+    h2 {
+      color: black;
+      text-align: center;
+      font-size: 3rem;
+      background-color: #ff6666;
+    }
+
+    h3 {
+      color: grey;
+      text-align: center;
+      font-size: 3rem;
+      background-color: orange;
+    }
+    
+    h4 {
+      color: yellow;
+      text-align: center;
+      background-color: black;
+    }
+
+    .container {
+      padding: 20px;
+    }
+    
+    .centerimage {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .pos_cen {
+      position: relative;
+      width: 92%;
+      margin: 0 3%;
+      background-color: #5579C6;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .img_deg {
+      float: right;
+      width: 35%;
+    }
+
+    /* Search Bar Styles */
+    .search-container {
+      position: relative;
+      display: inline-block;
+    }
+    .search-input {
+      padding: 8px 30px 8px 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #fff;
+      color: #333;
+      width: 200px;
+    }
+    .search-input:focus {
+      outline: none;
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    }
+    .search-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+    }
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+    .suggestion-item {
+      padding: 10px;
+      cursor: pointer;
+      color: #333;
+    }
+    .suggestion-item:hover {
+      background-color: #f0faff;
+    }
+    
+    footer {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #ffcccc, #cce6ff);
+  color: #2c3e50;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+  margin-top: 20px;
+}
+
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <img src="logo.jpg" alt="Logo">
+    </div>
+    <nav>
+       <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search..." oninput="showSuggestions(this.value)">
+        <span class="search-icon">🔍</span>
+        <div class="suggestions" id="suggestions"></div>
+      </div>
+      <a href="#TELUGU MAHASABALU">TELUGU MAHASABALU</a>
+      <a href="#BLOCKS">BLOCKS</a>
+      <a href="#LABS">LABS</a>
+      <a href="#GROUNDS">GROUNDS</a>
+      <a href="#SEMINAR HALLS">SEMINAR HALLS</a>
+      <a href="#FOOD STALLS">FOOD STALLS</a>
+      <a href="#PARKING">PARKING</a>
+      <a href="#CONTACT US">CONTACT US</a>
+      
+    </nav>
+  </header>
+
+  <h1 align="center">WELCOME TO GGU MAPS!</h1>
+  <video controls loop autoplay width="1450" height="350" align="center">
+    <source src="gguv.mp4">
+  </video>
+  <br><br><br><br>
+
+  <marquee bgcolor="#f2f3f2" scrollamount="33" height="100">
+    <img width="1500px" height="100" src="brands.jpg">
+  </marquee>
+  <br><br><br><br>
+
+  <div id="TELUGU MAHASABALU">
+    <marquee scrollamount="30" height="60" width="1500" bgcolor="red">
+      <font size="30" color="white">
+        <b>WELCOME TO TELUGU MAHASABALU!</b>
+      </font>
+    </marquee>
+    <br><br>
+    <img src="tms.jpg" width="700" height="600" border="1" class="centerimage">
+    <br><br>
+    <marquee scrollamount="25" height="30" width="1500" bgcolor="red">
+      <font size="5" color="yellow">
+        <b>CLICK ON BELOW BUTTON FOR TELUGU MAHASABALU! LOCATION</b>
+      </font>
+    </marquee>
+    <br><br>
+    <a href="https://maps.app.goo.gl/dx386tnSa3y3nAL29" target="_blank">
+      <input type="button" name="CLICK HERE FOR TELUGU MAHASABALU LOCATION" value="CLICK HERE FOR TELUGU MAHASABALU LOCATION" style="background-color: green; color: white;">
+    </a>
+    <br><br><br>
+  </div>
+
+  <div id="BLOCKS">
+    <br><br>
+    <h3>GODAVARI GLOBAL UNIVERSITY BLOCKS</h3>
+    <div class="grid">
+      <div class="block-card" onclick="showModal('GGU MAIN BLOCK')">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlofe8zm9ffSbdavg7Zu8mW6TnklG7yBFnnA&s" alt="GGU MAIN BLOCK">
+        <p><b>GGU MAIN BLOCK</b></p>
+      </div>
+      <div class="block-card" onclick="showModal('GGU VB BLOCK')">
+        <img src="https://www.firstnaukri.com/collegedir/index.php/MediaService/getCollegePhoto/colid/953b2dddbd888b25fcfea2b235d0bac62ee10355d1cd57e1/curid/2903" alt="GGU VB BLOCK">
+        <p><b>GGU VB BLOCK</b></p>
+      </div>
+      <div class="block-card" onclick="showModal('GGU AK BLOCK')">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRa_wRa93SqwgBCQpqNxNgVmoMTb-6BjyEA-A&s" alt="GGU AK BLOCK">
+        <p><b>GGU AK BLOCK</b></p>
+      </div>
+      <div class="block-card" onclick="showModal('GGU PHARMACY BLOCK')">
+        <img src="https://cache.careers360.mobi/media/colleges/social-media/media-gallery/6790/2019/4/3/Campus%20View%20of%20GIET%20School%20of%20Pharmacy%20Rajahmundry_Campus-View.JPG" alt="GGU PHARMACY BLOCK">
+        <p><b>GGU PHARMACY BLOCK</b></p>
+      </div>
+      <div class="block-card" onclick="showModal('GGU RK BLOCK')">
+        <img src="https://images.shiksha.com/mediadata/images/1495092567phpOfwKPp_205x160.png" alt="GGU RK BLOCK">
+        <p><b>GGU RK BLOCK</b></p>
+      </div>
+      <div class="block-card" onclick="showModal('GGU POLYTECHNIC BLOCK')">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiyT48IzqBzW1xabFnqELc9rIdTG0Qys8-Lr4QFo0uvPIbAB8UYZ3aPN7ghOIs-d_-rWM&usqp=CAU" alt="GGU POLYTECHNIC BLOCK">
+        <p><b>GGU POLYTECHNIC BLOCK</b></p>
+      </div>
+      <div class="block-card" onclick="showModal('GGU CVR BLOCK')">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjd7DA-eLoKFcwiYfAbFq5uTva_FcVW00iq-KD7YBPob-nkS6S04lIhnhdFhX3I9fGqPE&usqp=CAU" alt="GGU CVR BLOCK">
+        <p><b>GGU CVR BLOCK</b></p>
+      </div>
+      <div class="block-card" onclick="showModal('GGU SIR AC BLOCK')">
+        <img src="https://image-static.collegedunia.com/public/college_data/images/appImage/57114_uygjh.jpg?h=111.44&w=263&mode=stretch" alt="GGU SIR AC BLOCK">
+        <p><b>GGU SIR AC BLOCK</b></p>
+      </div>
+      <div class="block-card" onclick="showModal('GGU DEGREE BLOCK')">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYwnSd1CU5wTE1u_7hiFXLHTbTP5S7GdDd8Q&s" alt="GGU DEGREE BLOCK">
+        <p><b>GGU DEGREE BLOCK</b></p>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="blockModal">
+      <div id="modalContent">
+        <span id="closeBtn" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle"></h2>
+        <div id="modalInfo"></div>
+      </div>
+    </div>
+
+    <!-- Hidden Data Areas -->
+    <textarea id="ggumainblock-data" style="display:none;">
+<b>GGU MAIN BLOCK</b>
+<a href="https://maps.app.goo.gl/Ty61d9phx4KNLQ97A" target="_blank"><input type="button" name=" CLICK HERE FOR GGU MAIN BLOCK LOCATION " value=" CLICK HERE FOR GGU MAIN BLOCK LOCATION "></a><br>
+<b>MAIN BLOCK LOWER GROUND FLOOR:</b>
+<span style="color: red;">1ST STAIRS LEFT SIDE </span>
+MEDIUNITED CLINICS
+PUNJAB NATIONAL BANK ATM
+BESIDE GLOBE !
+
+<a><b>MAIN BLOCK GROUND FLOOR!</b>
+<span style="color: red;">1ST STAIRS LEFT SIDE :</span>
+ADMISSION OFFICE (MB003/003(1)
+SIMULATION LABORATORY (MB002/0021)
+FEMALE REST ROOM
+<span style="color: red;">1ST STAIRS RIGHT SIDE : </span>
+CENTRAL ADMINISTRATIVE OFFICE (MB004)(MB007)(MB006)(MB008)
+<span style="color:GREEN;">CHAIRMANS SIR'S CHAMBER {SRI K.V.V. SATYANARAYANA RAJU GARU}  </span>
+MB(010) MB (011)
+2ND STAIRS LEFT  SIDE ABOVE DATA
+<span style="color: red;">2ND STAIRS RIGHT SIDE:</span>
+GRIEVANCES  CELL / WOMEN EMPOWERMENT & ICC CELL
+<span style="color:BROWN;">DR.V KUSUMA KUMARI (DEAN-STUDENT PROGRESSION) </span>
+POWER SYSTEM LABORATORY
+ELECTRICAL MEASUREMENTS AND MACHINES LAB- 1&2
+3RD STAIRS RIGHT SIDE ABOVE DATA (MB019)
+<span style="color: red;">STAIRS LEFT SIDE</span>
+<span style="color:BROWN;">TECH WING (CEO-ANIRUDH) / DASSAULT LAB (MB020)</span>
+KALVIUM LAB
+APPLIED ROBOTIC CONTROL LAB
+INBETWEEN MBV AND VBB MALE REST ROOM
+<span style="color: red;">CONNECTING VB BOARD ROOM</span>
+
+<b>MAIN BLOCK LOWER GROUND FLOOR </b>
+<span style="color: red;">AT 3RD STAIRS RIGHT SIDE</span>
+PHYSICAL EDUCATION
+CENTRAL DATA NERVE (MBCO8)
+INBETWEEN MBV AND VBB
+FEMALE REST ROOM
+<span style="color: red;">CONNECTING VB TRASPORT OFFICE<br> </span>
+
+<b>MAIN BLOCK 1ST FLOOR </b>
+GGU VIEW POINT
+<span style="color: red;">1ST STAIRS RIGHT SIDE: </span>
+<span style="color:BROWN;">PRINCIPAL OFFICE (DR.T.JAYANANDA KUMAR) </span>
+EXAMINATION SECTION GGU
+MALE REST ROOM
+<span style="color: red;">1ST STAIRS LEFT SIDE :</span>
+<span style="color:BROWN;">VICE PRINCIPAL ADMINISTRATION OFFICE (DR.SVSN.MURTHY) </span>
+<span style="color:BROWN;">VICE PRINCIPAL ACADEMICS (DR.N.LEELAVATHY) </span>
+IC/PDC LAB (MB108,10)
+FEMALE REST ROOM
+RESEARCH AND DEVELOPMENT CELL/STAFF ROOM (MB110)
+ELECTRONIC DEVICES & CIRCUIT LAB (MB019/0191,MB11)
+2ND STAIRS
+2ND STAIRS RIGHT SIDE ABOVE DATA
+<span style="color: red;">2ND STAIRS LEFT</span>
+<span style="color:BROWN;">DIRECTOR OF QUALITY ASSURANCE (prof.T.V.PRASAD)(MB114/115)</span>
+VIRTUSA CENTER OF EXCELLENCE (MB116)
+MICROPROCESSOR & MICRO CONTROLLERS LAB (MB117)
+MICROWAVE & OPTICAL COMMUNICATION LAB (MB118)
+3RD STAIRS RIGHT SIDE ABOVE DATA
+<span style="color: red;">3RD STAIRS LEFT SIDE;</span>
+RESEARCH CENTER/ CENTER FOR IOT (MB119/118)
+COMMUNICATION LAB (MV209/MB119)
+<span style="color:BROWN;">DEPARTMENT OF CSE DATA SCIENCE (Dr.p.sri ram chandra)</span>(MB120)  
+STAFF ROOM (MB221)
+<span style="color: red;">CONNECTION TO VB BLOCK FROM (MV 209)</span>
+
+<b>MAIN BLOCK 2ND FLOOR </b>
+<span style="color: red;">1ST STAIRS RIGHT SIDE</span>
+STAFF ROOM
+<span style="color:BROWN;">DEPARTMENT OF ECE-HOD (DR.P.VENKATRAO)</span>
+MB-205,204,203,202,201
+MALE REST ROOM
+<span style="color: red;">1ST STAIRS LEFT SIDE</span>
+STAFF ROOM
+MB-206,207,208
+FEMALE REST ROOM
+MB-209,210,211
+IQAC (INTERNAL QUALITY ASSURANCE CELL) (MB217)
+2ND STAIRS RIGHT SIDE ABOVE DATA;
+<span style="color: red;">2ND STAIRS LEFT SIDE:</span>
+<span style="color:BROWN;">DEPARTMENT OF EEE-HOD (DR.D.RAVI KISHORE)</span>(MB219)
+STAFF ROOM (MB220)
+POWER ELECTRONICS AND LAB (MB221/2211)
+3RD STAIRS RIGHT SIDE ABOVE DATA
+<span style="color: red;">3RD STAIRS LEFT SIDE :</span>
+ELECTRICAL CIRCUIT SYSTEM ANALYSIS LAB (MB223/231)
+CENTER FOR ENGLISH LANGUAGE LEARNING (MV224)
+MB-212,226
+
+<b>MAIN BLOCK 3RD FLOOR </b>
+<span style="color: red;">1ST STAIRS RIGHT SIDE:</span>
+STAFF ROOM 
+<span style="color:BROWN;">DEPARTMENT OF MECHANICAL-HOD (DR.E.NIRMALA DEVI) (MB305)</span>
+LIBRARY (MB304)
+(MB-DH-1-303)
+(MB-DH-2-302)
+(MB-DH-1-301)
+MB-300
+MALE REST ROOM 
+<span style="color: red;">1ST STAIRS LEFT SIDE:</span>
+STAFF ROOM 
+MB-301,302MECHANICAL DEPARTMENT RESEARCH CENTER 
+FEMALE REST ROOM
+MB-303,304,305
+2ND STARIS RIGHT SIDE ABOVE DATA
+<span style="color: red;">2ND STAIRS LEFT SIDE</span>
+SCHOLARSHIP SECTION (MB-317)
+MB-306,307,307,308
+3RD STAIRS RIGHT SIDE ABOVE DATA
+<span style="color: red;">3RD STAIRS LEFT SIDE</span>
+MB-309,310<br>
+
+<h4>NAVIGATIONS</h4>
+<a href="https://maps.app.goo.gl/s2keqxL4m4AMZ8k69" target="_blank"><input type="button" name=" MAINGATE TO GIET 2NDC " value=" MAINGATE TO GIET 2NDC "></a>
+<a href="https://maps.app.goo.gl/zQV7H724nLSeR3aA6" target="_blank"><input type="button" name=" MAINGATE TO DEGREE BLOCK " value=" MAINGATE TO DEGREE BLOCK "></a>
+<a href="https://maps.app.goo.gl/cMncAV7UTSVJNoDP8" target="_blank"><input type="button" name=" MAINGATE TO PHARMACY " value=" MAINGATE TO PHARMACY "></a>
+<a href="https://maps.app.goo.gl/DVB1Nt3mW8apwx5y9" target="_blank"><input type="button" name=" MAINGATE TO RK BLOCK " value=" MAINGATE TO RK BLOCK "></a>
+<a href="https://maps.app.goo.gl/L9gVwBMnFpDaq46f7" target="_blank"><input type="button" name=" MAINGATE TO VB BLOCK " value=" MAINGATE TO VB BLOCK  "></a>
+</textarea>
+
+    <textarea id="gguvbblock-data" style="display:none;">
+<b>GGU VB BLOCK</b>
+<a href="https://maps.app.goo.gl/D1L9q29foK59oBbz5" target="_blank"><input type="button" name=" CLICK HERE FOR GGU VB BLOCK LOCATION " value=" CLICK HERE FOR GGU VB BLOCK LOCATION "></a><br>
+<b>GROUND FLOOR </b>
+<span style="color: red;">STAIRS LEFT SIDE </span>
+1.TRANSPORT OFFICE (VB001)
+2.ARTHUR BOB THOMAS (ABT) LAB (VB003)
+<span style="color: red;">STAIRS RIGHT SIDE </span>
+3.CSE ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING LAB (VB002)
+4.ARYABHATA COMPUTING LABORATORY (VB005)
+
+BETWEEN GROUND FLOOR AND 1ST FLOOR; LEARNING AND DEVELOPMENT(VB)
+
+<b>VB 1ST FLOOR </b>
+<span style="color: red;">STAIRS RIGHT SIDE;</span>
+1.VB SEMINAR HALL
+2.BOARD ROOM (VB102)
+INFORNT OF STAIRS GGU VIEW 
+<span style="color: red;">STAIRS LEFT SIDE:</span>
+<span style="color:BROWN;">3.HOD -LEARNING & DEVELOPMENT SHRIJA MADHU (VB109/104)</span>
+DRINKING WATER
+4.COMPUTATIONAL INTELLIGENCE LABORATORY DEP OF CSE (VB105)
+5.STAFF ROOM (VB106)
+6.STAFF ROOM (VB108)
+
+BETWEEN 1st FLOOR AND 2nd FLOOR; DEPARTMENT LIBRARY (VB 205 )
+
+<B>VB 2ND FLOOR</b>
+<span style="color: red;">STAIRS RIGHT SIDE :</span>
+VB-206,207,208,209
+<span style="color: red;">STAIRS LEFT SIDE :</span>
+<span style="color:BROWN;">HOD-CSE(TAMILKODI) (AIML&CS)(206/207)</span>
+VB-202,201
+
+BETWEEN 2nd FLOOR AND 3rd FLOOR; DEPARTMENT OF CSE (AIML&CS)
+
+<b>VB 3RD FLOOR</b>
+<span style="color: red;">STAIRS RIGHT SIDE :</span>
+VB-305,303,306,307
+<span style="color: red;">STAIRS LEFT SIDE :</span>
+VB-304,303,,302,301
+
+<h4>NAVIGATIONS</h4>
+<a href="https://maps.app.goo.gl/ZTrS28FCojSh6bXo9" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU MAIN BLOCK" value="GGU RK BLOCK TO GGU MAIN BLOCK "></a>
+<a href="https://maps.app.goo.gl/nEQfXUJ5jkmYgNHdA?g_st=ac" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU VB BLOCK " value=" GGU RK BLOCK TO GGU VB BLOCK"></a>
+<a href="https://maps.app.goo.gl/VEryZuL2MEWEFhfm6?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU PHARMACY BLOCK " value=" GGU RK BLOCK TO GGU PHARMACY BLOCK"></a>
+<a href="https://maps.app.goo.gl/SmLaFzfcvcTnuiQD9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU AK BLOCK" value="GGU RK BLOCK TO GGU AK BLOCK "></a>
+<a href="https://maps.app.goo.gl/qff6kMmGDbqbBNQB9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU CVR BLOCK" value="GGU RK BLOCK TO GGU CVR BLOCK"></a><br><br>
+</textarea>
+
+    <textarea id="gguakblock-data" style="display:none;">
+<b>GGU AK BLOCK</b>
+<a href="https://maps.app.goo.gl/LjQy95KFtysBCLJz8" target="_blank"><input type="button" name=" CLICK HERE FOR GGU AK BLOCK LOCATION " value=" CLICK HERE FOR GGU AK BLOCK LOCATION "></a>
+
+<b>AK GROUND FLOOR </b>
+<span style="color: red;">STAIRS RIGHT SIDE:</span>
+AUTOMOBILE ENGINEERING TUTORIAL ROOM (APJ05/03)
+CR(APJ-02,01)
+<span style="color: red;">STARIS LEFT SIDE:</span>
+HOD-AUTOMOBILE/STAFF ROOM (ABJ02A)
+R&AC LAB (ABJ02)
+CAO HOSTELS (APJ01)
+
+<b>AK 1ST FLOOR </b><br>
+<span style="color: red;">STAIRS RIGHT SIDE:</span>
+MINING ENGINEERING
+CLASS ROOMS 
+<span style="color: red;">STAIRS LEFT SIDE:</span>
+DEPT OF MINING ENG STAFF ROOM (ABJ101A)
+COMPUTER APPLICATIONS IN MINING ( APJ-102,303 & APJ-306/307/ABJ102A)
+
+<b>AK 2ND FLOOR </b>
+<span style="color: red;">STAIRS RIGHT SIDE:</span>
+CLASSROOM ABJ203
+PETROLEUM ANALYSIS LAB
+DRILLING FLUIDS LAB (APJ-301/APJ202)
+APJ-201
+<span style="color: red;">STAIRS LEFT SIDE</span>
+MINING GEOLOGY LAB (ABJ-205/204)
+ABJ-206/2051
+APJ-207/2061
+FEMALE RESTROOM
+
+<b>AK 3RD FLOOR</b> 
+<span style="color: red;">STAIRS RIGHT SIDE </span>
+PETROLEUM ENGINEERING DEPARTMENT
+CLASSROOMS APJ-403,402,
+STAFF ROOM / DEPT OF PETROLEUM ENG (ABJ-401)
+RESTROOM
+<span style="color: red;">STAIRS LEFT SIDE:</span>
+PETROLEUM RESERVOIR ENG LAB
+INSTRUMENTATION PROCESS DYNAMICS & CONTROL LAB
+REST ROOM<br>
+
+<h4>NAVIGATIONS</h4>
+<a href="https://maps.app.goo.gl/ZTrS28FCojSh6bXo9" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU MAIN BLOCK" value="GGU RK BLOCK TO GGU MAIN BLOCK "></a>
+<a href="https://maps.app.goo.gl/nEQfXUJ5jkmYgNHdA?g_st=ac" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU VB BLOCK " value=" GGU RK BLOCK TO GGU VB BLOCK  "></a>
+<a href="https://maps.app.goo.gl/VEryZuL2MEWEFhfm6?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU PHARMACY BLOCK " value=" GGU RK BLOCK TO GGU PHARMACY BLOCK"></a>
+<a href="https://maps.app.goo.gl/SmLaFzfcvcTnuiQD9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU AK BLOCK" value="GGU RK BLOCK TO GGU AK BLOCK "></a>
+<a href="https://maps.app.goo.gl/qff6kMmGDbqbBNQB9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU CVR BLOCK" value="GGU RK BLOCK TO GGU CVR BLOCK"></a>
+</textarea>
+
+    <textarea id="ggupharmacyblock-data" style="display:none;">
+<b>GGU PHARMACY BLOCK</b>
+<a href="https://maps.app.goo.gl/Mx1W7qifHQQMo73RA" target="_blank"><input type="button" name=" CLICK HERE FOR GGU PHARMACY BLOCK LOCATION " value=" CLICK HERE FOR GGU PHARMACY BLOCK LOCATION "></a>
+<br><b>GROUND FLOOR </b> 
+<span style="color: red;">STAIRS RIGHT SIDE:</span>
+LECTURE HALL 01 
+LECTURE HALL 02 
+STORE ROOM
+MACHINE ROOM
+LECTURE HALL 03
+<span style="color: red;">STAIRS LEFT SIDE:</span>
+ADMINISTRATIVE OFFICE
+CONFRENCE HALL
+ANIMAL HOUSE
+STAIRS
+CANTEEN  
+
+<b>FIRST FLOOR </b>
+<span style="color: red;">STAIRS RIGHT SIDE:</span>
+PHARMACEUTICS LAB #2
+EXAM CELL
+PHARMACEUTICS LAB #3
+<span style="color: red;">STAIRS LEFT SIDE:</span>
+PHARMACEUTICS LAB #1
+PHARMACEUTICAL ANALYSIS LAB
+PHARM TECHNOLOGY PG LAB
+MALE REST ROOMS
+CLASS ROOMS
+PHARMACY BLOCK
+
+<b>SECOND FLOOR</b><br>
+<span style="color: red;">STAIRS LEFT SIDE:</span>
+LIBRARY
+<span style="color: red;">STAIRS RIGHT SIDE:</span>
+PHARMACEUTICAL CHEMISTRY LAB #2,
+PHARMACEUTICAL CHEMISTRY LAB #1,
+GENTS TOILET
+DEPARTMENT OF PHYSICAL EDUCATION
+PHARMACEUTICAL CHEMISTRY LAB #3,
+IQAC(INTERNAL QUALITY ASSURANCE CELL
+
+<b>THIRD FLOOR </b>
+<span style="color: red;">STAIRS RIGHT SIDE</span>
+PHARMACOLOGY LAB#1
+PHARMACOLOGY LAB#2
+<span style="color: red;">STARIS LEFT SIDE</span>
+VICE PRINCIPAL OFFICE 
+PHARMACOGNOSY LAB
+GIRLS COMMON ROOM
+LECTURE HALL 14
+LECTURE HALL 12
+LECTURE HALL 11
+
+<h4>NAVIGATIONS</h4>
+<a href="https://maps.app.goo.gl/ZTrS28FCojSh6bXo9" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU MAIN BLOCK" value="GGU RK BLOCK TO GGU MAIN BLOCK "></a>
+<a href="https://maps.app.goo.gl/nEQfXUJ5jkmYgNHdA?g_st=ac" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU VB BLOCK " value=" GGU RK BLOCK TO GGU VB BLOCK  "></a>
+<a href="https://maps.app.goo.gl/VEryZuL2MEWEFhfm6?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU PHARMACY BLOCK " value=" GGU RK BLOCK TO GGU PHARMACY BLOCK"></a>
+<a href="https://maps.app.goo.gl/SmLaFzfcvcTnuiQD9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU AK BLOCK" value="GGU RK BLOCK TO GGU AK BLOCK "></a>
+<a href="https://maps.app.goo.gl/qff6kMmGDbqbBNQB9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU CVR BLOCK" value=" GGU RK BLOCK TO GGU CVR BLOCK  "></a>
+</textarea>
+
+    <textarea id="ggurkblock-data" style="display:none;">
+<b>GGU RK BLOCK</b>
+<a href="https://maps.app.goo.gl/tRrwXcHuYrWV8DdRA" target="_blank"><input type="button" name=" CLICK HERE FOR GGU RK BLOCK LOCATION " value=" CLICK HERE FOR RK BLOCK LOCATION "></a><br>
+
+<b>RK BLOCK GROUND FLOOR </b>
+<span style="color: red;">1ST STAIR LEFT SIDE</span>
+CANTEEN
+<span style="color: red;">1ST STAIR RIGHT SIDE</span>
+CENTRAL LIBRARY (RK001)(TIMINGS MON-SAT 8-8)
+FACULTY ROOM-RK006
+NCC UNIT RK004
+2ND STARIS LEFT SIDE ABOVE DATA
+<span style="color: red;">2ND STAIRS RIGHT SIDE:</span>
+HOD FRESHMAN ENG DEPT
+DRINKING WATER 
+CHEMISTRY LAB
+MALE REST ROOMS
+FACULTY ROOM
+ELECTRICAL ENGINEERING LAB (RK012A)
+DIGITAL LIBRARY
+3RD STAIRS LEFT SIDE ABOVE DATA
+<span style="color: red;">3RD STAIRS RIGHT SIDE</span>
+RK SEMINAR HALL
+
+<b>RK BLOCK 1ST FLOOR </b>
+<span style="color: red;">1ST STAIR LEFT SIDE</span>
+LIBRARY AND READING ROOM (101/201)
+FACULTY/STAFF ROOM (102/202)
+COMPUTER APPLICATIONS (RK103/203)
+2ND STAIRS RIGHT SIDE ABOVE DATA
+<span style="color: red;">2ND STAIRS LEFT SIDE:</span>
+COMPUTET LAB (RK104/204)
+COMPUTER APPLICATION LAB (RK105)
+DRAWING HALL-1 (RK-106,108)
+FEMALE RESTROOMS (107)
+LABS
+3RD STAIR RIGHT SIDE ABOVE DATA
+<span style="color: red;">3RD STAIR LEFT SIDE:</span>
+COMPUTER LAB-1 (RK111-114)
+
+<b>RK BLOCK SECOND FLOOR:</b>
+<span style="color: red;">1ST STAIR RIGHT SIDE:</span>
+UNDER CONTRUCTION 
+<span style="color: red;">1ST STAIR LEFT SIDE:</span>
+RK SF-201, RK SF-202,RK SF-203,RK SF-204,RK SF-205,
+RK SF-206,RK SF-207,RK SF-208,RK SF-209,RK SF-210.
+2ND STARIS RIGHT SIDE ABOVE DATA
+<span style="color: red;">2ND STAIRS LEFT SIDE:</span>
+RK SF-211,RK SF-212,RK SF-213,RK SF-214,
+RK SF-215,RK SF-216,RK SF-217,
+GGU-ICAR CENTER FOR RESEARCH EXCELLENCE
+3RD STAIRS RIGHT SIDE ABOVE DATA
+<span style="color: red;">3RD STAIRS LEFT SIDE</span>
+RK SF-219,RK SF-220,RK SF-221,RK SF-222
+
+<b>RK BLOCK 3RD FLOOR </b>
+<span style="color: red;">STAIRS LEFT SIDE:</span>
+RK TF-301,302(1-2 MCA )
+RK TF-303,304,305,306
+2ND STAIRS RIGHT SIDE ABOVE DATA:
+<span style="color: red;">2ND STAIRS LEFT SIDE:</span>
+RKTF-307,308
+DRAWING HALL-2 RKTF-309
+RKTF-310,311,312,313,314,315
+3RD STAIRS RIGHT SIDE ABOVE DATA:
+<span style="color: red;">3RD STAIRS RIGHT SIDE:</span>
+RKTF-317,318,319,320
+<span style="color: red;">3RD STAIRS LEFT SIDE:</span>
+UNDER CONSTRUCTION 
+
+<h4>NAVIGATIONS</h4>
+<a href="https://maps.app.goo.gl/ZTrS28FCojSh6bXo9" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU MAIN BLOCK" value="GGU RK BLOCK TO GGU MAIN BLOCK "></a>
+<a href="https://maps.app.goo.gl/nEQfXUJ5jkmYgNHdA?g_st=ac" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU VB BLOCK " value=" GGU RK BLOCK TO GGU VB BLOCK  "></a>
+<a href="https://maps.app.goo.gl/VEryZuL2MEWEFhfm6?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU PHARMACY BLOCK " value=" GGU RK BLOCK TO GGU PHARMACY BLOCK"></a>
+<a href="https://maps.app.goo.gl/SmLaFzfcvcTnuiQD9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU AK BLOCK" value="GGU RK BLOCK TO GGU AK BLOCK "></a>
+<a href="https://maps.app.goo.gl/qff6kMmGDbqbBNQB9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU CVR BLOCK" value="GGU RK BLOCK TO GGU CVR BLOCK"></a>
+</textarea>
+
+    <textarea id="ggupolytechnicblock-data" style="display:none;">
+<b>GGU POLYTECHNIC BLOCK</b>
+<a href="https://maps.app.goo.gl/3uQ2Lfssb8NcpJDp9" target="_blank"><input type="button" name=" CLICK HERE FOR GGU POLYTECHNIC BLOCK LOCATION " value=" CLICK HERE FOR GGU POLYTECHNIC BLOCK LOCATION "></a><br>
+
+<b>POLYTECHNIC GROUND FLOOR </b>
+<span style="color: red;">1ST STAIR LEFT SIDE:</span>
+<span style="color: brown;">PRINCIPAL OFFICE (104) DR.PG.RAMANUJAM</span>
+ADMINISTRATIVE OFFICE (103)
+EXAMINATION SECTION (102)
+STAFF TOILETS(101)
+<span style="color: red;">STAIRS RIGHT SIDE :</span>
+106, COMPUTER LAB-1 (107), 
+COMPUTER LAB-2 (108).109,110,111
+2ND STAIRS LEFT SIDE ABOVE DATA
+<span style="color: red;">2ND STAIRS RIGHT SIDE:</span>
+112,113
+DEPARTMENT OF HBS (114)
+FEMALE RESTROOMS (115)
+
+<b>POLYTECHNIC FISRT FLOOR</b>
+<span style="color: red;">1ST STAIR RIGHT SIDE:</span>
+COMPUTER LAB-3,
+CIVIL ENGINEERING LAB,
+BOYS TOILETS 1ST YEARS,
+<span style="color: red;">1ST STAIR LEFT SIDE:</span>
+DEPARTMENT OF PHYSICAL EDUCATION,
+LIBRARY,DE LAB,
+COMMUNICATION LAB(ELECTRONIC CIRCUITS -2 LAB)
+SECOND YEAR CIVIL 211,
+2ND STARIS RIGHT SIDE ABOVE DATA
+<span style="color: red;">2ND STAIRS LEFT SIDE:</span>
+DEPARTMENT OF ECE
+ELECTRONIC CIRCUITS LAB
+ELECTRICAL WORKSHOP 
+GIRLS TOILETS
+
+<b>POLYTECHNIC SECOND FLOOR</b>
+<span style="color: red;">1ST STAIR RIGHT SIDE:</span>
+DEPARTMENT OF CIVIL ENGINEERING 305 ,
+DRAWING HALL-2(304),
+SEMINAR HALL 303 ,
+DRAWING HALL-1 302 ,301
+<span style="color: red;">1ST STAIR LEFT SIDE:</span>
+HEAD OF THE DEPARTMENT CIVIL ENGINEERING 306
+THIRD YEAR CIVIL 307
+SECOND YEAR CSE-1 308
+CSE-2 309,CSE-3,
+SECOND YEAR AI 311,312
+2ND STARIS RIGHT SIDE ABOVE DATA
+<span style="color: red;">2ND STAIRS LEFT SIDE:</span>
+HBS STAFF ROOM 313, 314,315 
+GIRLS TOILETS
+
+<b>POLYTECHNIC 3RD FLOOR </b>
+<span style="color: red;">STARIS RIGHT SIDE:</span>
+HOD-MECH ENG (405)
+DEPT MECH ENG (404)
+CR:403,402
+MALE RESTROOM (401)
+<span style="color: red;">STAIRS LEFT SIDE:</span>
+CR:406,407,408,409,410,411,412
+2ND STAIRS RIGHT SIDE ABOVE DATA
+<span style="color: red;">2ND STAIRS LEFT SIDE:</span>
+DEPT OF EEE (413)
+CR:414,415
+FEMALE REST ROOMS (416)
+POLYTECHNIC BLOCK
+INFRONT OF 1ST STAIR & BESIDE OF 2ND STAIR
+
+<h3>LABS !</h3>MATERIAL TESTING LAB
+DRAWING HALL-3
+PHYSICS LAB
+CHEMISTRY LAB 
+FM&HM LAB
+THERMAL ENGINEERING LAB
+
+<h4>NAVIGATIONS</h4><a href="https://maps.app.goo.gl/ZTrS28FCojSh6bXo9" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU MAIN BLOCK" value="GGU RK BLOCK TO GGU MAIN BLOCK "></a>
+<a href="https://maps.app.goo.gl/nEQfXUJ5jkmYgNHdA?g_st=ac" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU VB BLOCK " value=" GGU RK BLOCK TO GGU VB BLOCK  "></a>
+<a href="https://maps.app.goo.gl/VEryZuL2MEWEFhfm6?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU PHARMACY BLOCK " value=" GGU RK BLOCK TO GGU PHARMACY BLOCK"></a>
+<a href="https://maps.app.goo.gl/SmLaFzfcvcTnuiQD9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU AK BLOCK" value="GGU RK BLOCK TO GGU AK BLOCK "></a>
+<a href="https://maps.app.goo.gl/qff6kMmGDbqbBNQB9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU CVR BLOCK" value=" GGU RK BLOCK TO GGU CVR BLOCK  "></a>
+</textarea>
+
+    <textarea id="ggucvrblock-data" style="display:none;">
+<b>GGU CVR BLOCK</b>
+<a href="https://maps.app.goo.gl/hBjXCgmHPuDvViKG7" target="_blank"><input type="button" name=" CLICK HERE FOR GGU CV RAMAN BLOCK LOCATION " value=" CLICK HERE FOR GGU CV RAMAN BLOCK LOCATION "></a>
+
+<b>GEC CVRB GROUND FLOOR</b>
+IST STAIRS
+RECEPTION
+<span style="color: red;">STAIRS RIGHT SIDE</span>
+<span style="color: red;">RS-</span>
+PRINCIPAL OFFICE C108
+PRINCIPAL C 107
+SKILL DEVELOPMENT CENTRE C106
+GENTS REST ROOMS C105C
+LADIES REST ROOMS C105B
+ROOM C105A
+<span style="color: red;">LS-</span>
+IQAC C101
+ADMINISTRATIVE OFFICE C102
+BOARD ROOM C103
+MANAGEMENT CHAMBER C104
+<span style="color: red;">STAIRS LEFT SIDE</span>
+<span style="color: red;">RS-</span>
+C117
+C116
+CENTRAL LIBRARY C115
+2ND STAIRS
+<span style="color: red;">LS-</span>
+SEMINAR HALL
+C110-C112
+
+<b>GEC CVRB 1ST FLOOR</b>
+<span style="color: red;">STAIRS RIGHT SIDE</span>
+<span style="color: red;">RS-</span>
+LIBRARY 
+2ND STAIRS
+<span style="color: red;">LS-</span>
+ADVANCED PROGRAMMING LAB
+DEPT OF HUMANITIES & BASIC SCIENCES
+<span style="color: red;">STAIRS LEFT SIDE</span>
+<span style="color: red;">RS-</span>
+STAFF ROOM C208
+C207
+C206
+C205
+<span style="color: red;">LS-</span>
+<span style="color:BROWN;">HOD-HBS C201 (MR.M.SREENIVASU)</span>
+C202
+C203
+C204
+
+<b>GEC CVRB 2ND FLOOR</b> 
+<span style="color: red;">STAIRS RIGHT SIDE</span>
+DEPT INFORMATION TECHNOLOGY
+<span style="color: red;">RS-</span>
+HOD-IT C316
+C318
+C317
+C316
+2ND STAIRS
+<span style="color: red;">LS-</span>
+STAFF ROOM C309
+PROJECT LAB C310
+MACHINE LEARNING LAB C311
+HOD-MCA C312
+MASTER OF COMPUTER APPLICATION
+<span style="color: red;">STAIRS LEFT SIDE</span>
+DEPT OF COMPUTER SCIENCE ENGINEERING
+<span style="color: red;">RS-</span>
+STAFF ROOM C308
+C307
+C306
+C305
+<span style="color: red;">LS-</span>
+HOD-FED C301
+C302
+C303
+C304
+
+<b>GEC CVRB 3RD FLOOR</b>
+<span style="color: red;">STAIRS RIGHT SIDE</span>
+<span style="color: red;">RS-</span>
+WORK IN PROGRESS
+2ND STAIRS
+<span style="color: red;">LS-</span>
+PHYSICS LAB
+<span style="color: red;">STAIRS LEFT SIDE</span>
+<span style="color: red;">RS-</span>
+NSS UNIT C408
+C407
+C406
+C405
+<span style="color: red;">LS-</span>
+HOD-MECH C401
+C402
+C403
+C404
+<h3> LABS </h3>
+BESIDE CVRB
+CHEMISTRY LAB / ADDITIONAL WORK SHOP
+S301-303
+<h4>NAVIGATIONS</h4><a href="https://maps.app.goo.gl/ZTrS28FCojSh6bXo9" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU MAIN BLOCK" value="GGU RK BLOCK TO GGU MAIN BLOCK "></a>
+<a href="https://maps.app.goo.gl/nEQfXUJ5jkmYgNHdA?g_st=ac" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU VB BLOCK " value=" GGU RK BLOCK TO GGU VB BLOCK  "></a>
+<a href="https://maps.app.goo.gl/VEryZuL2MEWEFhfm6?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU PHARMACY BLOCK " value=" GGU RK BLOCK TO GGU PHARMACY BLOCK"></a>
+<a href="https://maps.app.goo.gl/SmLaFzfcvcTnuiQD9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU AK BLOCK" value="GGU RK BLOCK TO GGU AK BLOCK "></a>
+<a href="https://maps.app.goo.gl/qff6kMmGDbqbBNQB9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU CVR BLOCK" value=" GGU RK BLOCK TO GGU CVR BLOCK "></a>
+</textarea>
+
+    <textarea id="ggusiracblock-data" style="display:none;">
+<b>GEC SIR AC BLOCK</b>
+<a href="https://maps.app.goo.gl/CdkeKL55TW5Z2uoY8" target="_blank"><input type="button" name=" CLICK HERE FOR GGU SIR AUTHOR COTTON BLOCK LOCATION " value=" CLICK HERE FOR GGU SIR AUTHOR COTTON BLOCK LOCATION "></a><br>
+
+<b>GEC SIR ACB GROUND FLOOR </b>
+<span style="color: red;">STAIRS RIGHT SIDE :</span>
+A105
+COMPUTER LAB A106
+FACULTY REST ROOMS A107
+<span style="color: red;">STAIRS LEFT SIDE :</span>
+REST ROOM FOR PHYSICALLY CHALLENGED A108
+EXAM SECTION A104
+BASIC PROGRAMMING LAB A103
+A102
+TRAINING AND PLACEMENT CELL A101
+
+<b>GEC SIR ACB FIRST FLOOR </b>
+<span style="color: red;">STAIRS RIDHT SIDE:</span>
+ELECTRONIC AND COMMUNICATION ENGINEERING
+A204
+A203
+ARDUINO STLD LAB A202
+MW/AC/DC LAB A201
+<span style="color: red;">STAIRS LEFT SIDE:</span>
+HOD ECE A205
+EDC WORKSHOP A206
+A207
+LADIES TOLIETS
+
+<b>GEC SIR ACB 2ND FLOOR </b>
+<span style="color: red;">STAIRS RIGHT SIDE :</span>
+STAFF ROOM A304
+A303
+A302
+A301
+<span style="color: red;">STAIRS LEFT SIDE :</span>
+INCUBATION CENTER A305
+A306
+A307
+MALE REST ROOM A305
+
+<b>GEC SIR ACB THRID FLOOR </b>
+<span style="color: red;">STAIRS RIGHT SIDE :</span>
+MANAGEMENT STUDIES A404,
+A402,
+A401,
+<span style="color: red;">STAIRS LEFT SIDE :</span>
+A405
+A406
+A407
+GIRLS TOILET
+
+<h3>LABS</h3>
+<span style="color: red;">BESIDE SIR ACB</span>
+GENTS TOILETS
+<span style="color: red;">B-1</span>
+WORK SHOP-2
+S101-107
+ELECTRICAL CIRCUITS LAB S102
+ELECTRICAL MACHINES LAB S103
+ENGINEERING WORK SHOP S104
+<span style="color: red;">B-2</span>
+DEPT OF PHYSICAL EDUCATION
+CIVIL ENGINEERING LAB
+BOYS COMMON ROOM S207
+MECHANICAL ENGINEERING LAB
+S201-205
+
+<h4>NAVIGATIONS</h4>
+<a href="https://maps.app.goo.gl/ZTrS28FCojSh6bXo9" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU MAIN BLOCK" value="GGU RK BLOCK TO GGU MAIN BLOCK "></a>
+<a href="https://maps.app.goo.gl/nEQfXUJ5jkmYgNHdA?g_st=ac" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU VB BLOCK " value=" GGU RK BLOCK TO GGU VB BLOCK  "></a>
+<a href="https://maps.app.goo.gl/VEryZuL2MEWEFhfm6?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU PHARMACY BLOCK " value=" GGU RK BLOCK TO GGU PHARMACY BLOCK"></a>
+<a href="https://maps.app.goo.gl/SmLaFzfcvcTnuiQD9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU AK BLOCK" value="GGU RK BLOCK TO GGU AK BLOCK "></a>
+<a href="https://maps.app.goo.gl/qff6kMmGDbqbBNQB9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU CVR BLOCK" value=" GGU RK BLOCK TO GGU CVR BLOCK  "></a>
+</textarea>
+
+    <textarea id="ggudegreeblock-data" style="display:none;">
+<b>GGU DEGREE BLOCK</b>
+<a href="https://maps.app.goo.gl/zX8JGfnbgYzqzqQ46" target="_blank"><input type="button" name=" CLICK HERE FOR GGU DEGREE BLOCK LOCATION " value=" CLICK HERE FOR GGU DEGREE BLOCK LOCATION "></a><br>
+
+<h3>ARYABHAT BLOCK </h3>
+<b>GGU GROUND FLOOR</b>
+<span style="color: red;">STAIRS RIGHT SIDE:</span>
+ADMINISTRATIVE OFFICE,
+PRINCIPAL'S OFFICE,
+BOARD ROOM,
+<span style="color: green;">CHAIRMAN SIR'S CHAMBER</span>
+<span style="color: red;">STAIRS LEFT SIDE:</span>
+CYBER SECURITY LAB,
+CAFETERIA,
+MALE TOILETS
+
+<b>ARYABHATA BLOCK 1ST FLOOR </b>
+<span style="color: red;">STARIS LEFT SIDE :</span>
+LH1,
+RECORD ROOM
+COMPUTER LAB
+<span style="color: red;">STAIRS RIGHT SIDE :</span>
+SEMINAR HALL
+FEMALE REST ROOM
+
+<b>ARYABHATA BLOCK 2ND FLOOR </b>
+<span style="color: red;">STAIRS LEFT SIDE :</span>
+LH 2,3,4
+<span style="color: red;">STAIRS RIGHT SIDE :</span>
+LH 5,6,7
+MALE REST ROOM
+
+<b>ARYABHATA BLOCK 3RD FLOOR</b>
+<span style="color: red;">STAIRS RIGHT SIDE:</span>
+IDEATHON ROOM,
+CHEMISTRY LAB-2,
+PHYSICS LAB,
+CHEMISTRY LAB-1
+<span style="color: red;">STAIRS LEFT SIDE:</span>
+FORSENIC SCIENCE LAB-1,
+MALE TOLIET
+
+<h3><b>SARDHAR VALABHAI PATEL BLOCK </b></h3>
+<b>SVPB GROUND FLOOR</b>
+<span style="color: red;">STAIRS 1 LEFT SIDE :</span>
+COMPUTER LAB 
+SKILL LAB
+FEMALE REST ROOMS
+<span style="color: red;">STAIRS 1 RIGHT SIDE :</span>
+CANTEEN 
+LIBRARY 
+EXAM CELL
+PLACEMENT CELL
+IQAC (INTERNAL QUALITY ASSURANCE CELL)
+STAIRS 2 
+2ND STAIRS RIGHT SIDE ABOVE DATA 
+<span style="color: red;">STAIRS 2 LEFT SIDE :</span>
+STORE ROOM 
+MALE REST ROOMS
+
+<b>SVPB FIRST FLOOR</b>
+<span style="color: red;">STAIRS 1 RIGHT SIDE :</span>
+110,111,
+MALE TOILETS
+<span style="color: red;">STAIRS 1 LEFT SIDE :</span>
+109
+108,107,106, 105,104,103
+STAIRS 2 LEFT SIDE ABOVE DATA 
+<span style="color: red;">STAIRS 2 RIGHT SIDE :</span>
+102, DEPARTMENT PHYSICAL EDUCATION
+101, LADIES TOLIETS
+
+<b>SVPB 2ND FLOOR </b>
+<span style="color: red;">STAIRS 1 RIGHT SIDE :</span>
+209,
+DEPT OF COMPUTER SCIENCE
+HUMANITIES AND BASIC SCIENCE
+FEMALE RESTROOM
+<span style="color: red;">STAIRS 1 LEFT SIDE :</span>
+208,207,206,
+205(NSS CELL)
+205,204,203,
+STAIRS 2 RIGHT SIDE ABOVE DATA
+<span style="color: red;">STAIRS 2 LEFT SIDE :</span>
+202,201
+MALE RESTROOM
+
+<b>SVPB THIRD FLOOR</b>
+<span style="color: red;">STAIRS 1 RIGHT SIDE :</span>
+WORK IN PROGRESS
+<span style="color: red;">STAIRS 1 LEFT SIDE :</span>
+309,308,304,306,
+STAIRS 2 LEFT SIDE ABOUT DATA :
+<span style="color: red;">STAIRS 2 RIGHT SIDE :</span>
+DEPARTMENT OF CIVIL ENGINEERING,
+STORE ROOM,
+LADIES TOLIETS
+
+<h4>NAVIGATIONS</h4>
+<a href="https://maps.app.goo.gl/ZTrS28FCojSh6bXo9" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU MAIN BLOCK" value="GGU RK BLOCK TO GGU MAIN BLOCK "></a>
+<a href="https://maps.app.goo.gl/nEQfXUJ5jkmYgNHdA?g_st=ac" target="_blank"><input type="button" name=" GGU RK BLOCK TO GGU VB BLOCK " value=" GGU RK BLOCK TO GGU VB BLOCK  "></a>
+<a href="https://maps.app.goo.gl/VEryZuL2MEWEFhfm6?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU PHARMACY BLOCK " value=" GGU RK BLOCK TO GGU PHARMACY BLOCK"></a>
+<a href="https://maps.app.goo.gl/SmLaFzfcvcTnuiQD9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU AK BLOCK" value="GGU RK BLOCK TO GGU AK BLOCK "></a>
+<a href="https://maps.app.goo.gl/qff6kMmGDbqbBNQB9?g_st=ac" target="_blank"><input type="button" name="GGU RK BLOCK TO GGU CVR BLOCK" value=" GGU RK BLOCK TO GGU CVR BLOCK  "></a>
+</textarea>
+  </div>
+
+  <script>
+    function showModal(blockName) {
+      document.getElementById("modalTitle").innerText = blockName;
+      const id = blockName.toLowerCase().replace(/\s+/g, '') + "-data";
+      const dataElement = document.getElementById(id);
+      const data = dataElement ? dataElement.value : "<b style='color:red;'>No details found.</b>";
+      document.getElementById("modalInfo").innerHTML = data;
+      document.getElementById("blockModal").style.display = "flex";
+    }
+    function closeModal() {
+      document.getElementById("blockModal").style.display = "none";
+    }
+
+    // Search functionality
+    const suggestionsList = [
+      "TELUGU MAHASABALU",
+      "GGU MAIN BLOCK",
+      "GGU VB BLOCK",
+      "GGU AK BLOCK",
+      "GGU PHARMACY BLOCK",
+      "GGU RK BLOCK",
+      "GGU POLYTECHNIC BLOCK",
+      "GGU CVR BLOCK",
+      "GGU SIR AC BLOCK",
+      "GGU DEGREE BLOCK",
+      "MECHANICAL LAB BESIDE VB",
+      "FAB LAB BESIDE RK",
+      "POLYTECHNIC LABS",
+      "GEC LABS",
+      "SIR ACB LABS",
+      "DEGREE LABS",
+      "BUSES GROUND",
+      "BASKETBALL COURT",
+      "FOOTBALL COURT",
+      "CRICKET GROUND",
+      "MAHASABALU GROUND",
+      "VB BESIDE STALLS",
+      "FOOD COURT",
+      "YUMPPYS",
+      "CENTRAL FOOD COURT",
+      "SPICE HUB",
+      "ZONE 1",
+      "ZONE 2",
+      "ZONE 3",
+      "ZONE 4",
+      "GGU LIBRARY",
+      "AMPHI THEATRE",
+      "LOTUS POND",
+      "BAMBOOS SPOT",
+      "BOYS HOSTELS",
+      "GIRLS HOSTELS",
+      "SARASWATHIDEVI TEMPLE",
+      "PARKING AT MAIN GATE",
+      "PARKING AT BAMBOO",
+      "PARKING AT RK BLOCK",
+      "PARKING AT GEC",
+      "CONTACT US",
+      "VB BLOCK SEMINAR HALL",
+      "PHARMACY BLOCK SEMINAR HALL",
+      "RK BLOCK SEMINAR HALL",
+      "GEC BLOCK SEMINAR HALL",
+      "DEGREE BLOCK SEMINAR HALL"
+    ];
+
+    const linkMap = {
+      "MECHANICAL LAB BESIDE VB": "https://maps.app.goo.gl/Vg44vo1LCsF2tcUG7",
+      "FAB LAB BESIDE RK": "https://maps.app.goo.gl/6w67Wepe2Cz9dovU6",
+      "POLYTECHNIC LABS": "https://maps.app.goo.gl/sVXUrPTYSGDMJDjK9",
+      "GEC LABS": "https://maps.app.goo.gl/Sk1hnGvtsNNbQpSu7",
+      "SIR ACB LABS": "https://maps.app.goo.gl/FaN9LtSpw7KhdR3K7",
+      "DEGREE LABS": "https://maps.app.goo.gl/rwMiWcA66rB28iqm8",
+      "BUSES GROUND": "https://maps.app.goo.gl/qdeG2uwwNt4Jf2VF9",
+      "BASKETBALL COURT": "https://maps.app.goo.gl/UHy5Y8Xa1zRqUsfF8",
+      "FOOTBALL COURT": "https://maps.app.goo.gl/hb5BGkKUJg5iwqbF8",
+      "CRICKET GROUND": "https://maps.app.goo.gl/3t5TLnFwSYws6Sc8A",
+      "MAHASABALU GROUND": "https://maps.app.goo.gl/dx386tnSa3y3nAL29",
+      "VB BESIDE STALLS": "https://maps.app.goo.gl/ZTrS28FCojSh6bXo9",
+      "FOOD COURT": "https://maps.app.goo.gl/nEQfXUJ5jkmYgNHdA",
+      "YUMPPYS": "https://maps.app.goo.gl/8gtFVf7EPiycH4w56",
+      "CENTRAL FOOD COURT": "https://maps.app.goo.gl/7HMD76ZX9eZkwQnK7",
+      "SPICE HUB": "https://maps.app.goo.gl/qff6kMmGDbqbBNQB9",
+      "ZONE 1": "https://maps.app.goo.gl/J7swjS28esAZRTfv7",
+      "ZONE 2": "https://maps.app.goo.gl/bwVTDbn3ahxmnRMp9",
+      "ZONE 3": "https://maps.app.goo.gl/D18N1S2nmgrsV54Q8",
+      "ZONE 4": "https://maps.app.goo.gl/snxzEBraoFdH458S6",
+      "GGU LIBRARY": "https://maps.app.goo.gl/TYA7YLERH7sWN3wK6",
+      "AMPHI THEATRE": "https://maps.app.goo.gl/HK2UC9PjBwrKg6ic7",
+      "LOTUS POND": "https://maps.app.goo.gl/PdfaqSNyjQUuwqNL9",
+      "BAMBOOS SPOT": "https://maps.app.goo.gl/7Lva42S5G5Wjg7ci8",
+      "BOYS HOSTELS": "https://maps.app.goo.gl/gyjMj2WAN8vskFRk8",
+      "GIRLS HOSTELS": "https://maps.app.goo.gl/kcaEXALM4bQz8apZ6",
+      "SARASWATHIDEVI TEMPLE": "https://maps.app.goo.gl/JDv9q7Ef4mnXr4He8",
+      "PARKING AT MAIN GATE": "https://maps.app.goo.gl/zt1bzzYAspM1Drt28",
+      "PARKING AT BAMBOO": "https://maps.app.goo.gl/24XBKze8LbbiAtw29",
+      "PARKING AT RK BLOCK": "https://maps.app.goo.gl/tgzs3iU5otwYCRe99",
+      "PARKING AT GEC": "https://maps.app.goo.gl/j3KisW9a9iCwerhm8",
+      "CLICK HERE FOR TELUGU MAHASABALU LOCATION": "https://maps.app.goo.gl/dx386tnSa3y3nAL29",
+      "VB BLOCK SEMINAR HALL":"https://maps.app.goo.gl/D1L9q29foK59oBbz5",
+      "PHARMACY BLOCK SEMINAR HALL":"https://maps.app.goo.gl/Mx1W7qifHQQMo73RA",
+      "RK BLOCK SEMINAR HALL":"https://maps.app.goo.gl/tRrwXcHuYrWV8DdRA",
+      "GEC BLOCK SEMINAR HALL":"https://maps.app.goo.gl/ZM8BPthrHBQf4rjP7?g_st=ac",
+      "DEGREE BLOCK SEMINAR HALL":"https://maps.app.goo.gl/zX8JGfnbgYzqzqQ46"
+    };
+
+    function showSuggestions(query) {
+      const suggestionsDiv = document.getElementById("suggestions");
+      suggestionsDiv.innerHTML = "";
+      if (query.trim() === "") {
+        suggestionsDiv.style.display = "none";
+        return;
+      }
+      const filteredSuggestions = suggestionsList.filter(item =>
+        item.toLowerCase().includes(query.toLowerCase())
+      );
+      if (filteredSuggestions.length > 0) {
+        filteredSuggestions.forEach(item => {
+          const suggestionItem = document.createElement("div");
+          suggestionItem.className = "suggestion-item";
+          suggestionItem.innerText = item;
+          suggestionItem.onclick = () => {
+            const input = document.querySelector(".search-input");
+            input.value = item;
+            suggestionsDiv.style.display = "none";
+            navigateToSection(item);
+          };
+          suggestionsDiv.appendChild(suggestionItem);
+        });
+        suggestionsDiv.style.display = "block";
+      } else {
+        suggestionsDiv.style.display = "none";
+      }
+    }
+
+    function navigateToSection(item) {
+      const blockNames = [
+        "GGU MAIN BLOCK",
+        "GGU VB BLOCK",
+        "GGU AK BLOCK",
+        "GGU PHARMACY BLOCK",
+        "GGU RK BLOCK",
+        "GGU POLYTECHNIC BLOCK",
+        "GGU CVR BLOCK",
+        "GGU SIR AC BLOCK",
+        "GGU DEGREE BLOCK"
+      ];
+
+      if (blockNames.includes(item)) {
+        showModal(item);
+      } else if (["TELUGU MAHASABALU", "LABS", "GROUNDS", "FOOD STALLS", "PARKING", "CONTACT US"].includes(item)) {
+        const sectionId = item.toUpperCase().replace(/\s+/g, "_");
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth" });
+        }
+      } else if (linkMap[item]) {
+        window.open(linkMap[item], "_blank");
+      } else {
+        // Fallback for any unmatched items
+        const link = document.querySelector(`input[value="${item}"]`);
+        if (link) {
+          window.open(link.parentElement.href, "_blank");
+        } else {
+          console.warn(`No action defined for suggestion: ${item}`);
+        }
+      }
+    }
+  </script>
+
+  <div id="LABS">
+    <h2>GGU LABS</h2>
+    <div class="pos_cen">
+      <img class="img_deg" src="https://static.vecteezy.com/system/resources/thumbnails/016/917/520/small_2x/animated-chemistry-class-in-school-laboratory-experiment-science-lab-looped-flat-color-2d-cartoon-characters-animation-with-classroom-environment-on-background-hd-with-alpha-channel-video.jpg">
+      <p>
+        <a href="https://maps.app.goo.gl/Vg44vo1LCsF2tcUG7" target="_blank"><input type="button" name=" MECHANICAL LAB BESIDE VB " value="MECHANICAL LAB BESIDE VB"></a><br>
+        <a href="https://maps.app.goo.gl/6w67Wepe2Cz9dovU6" target="_blank"><input type="button" name=" FAB LAB BESIDE RK " value="FAB LAB BESIDE RK"></a><br>
+        <a href="https://maps.app.goo.gl/kHHpoMqRkmfG7Tg57" target="_blank"><input type="button" name="POLYTECHNIC LABS" value="POLYTECHNIC LABS"></a><br>
+        <a href="https://maps.app.goo.gl/Sk1hnGvtsNNbQpSu7" target="_blank"><input type="button" name=" GEC LABS " value="GEC LABS"></a><br>
+        <a href="https://maps.app.goo.gl/FaN9LtSpw7KhdR3K7" target="_blank"><input type="button" name=" SIR ACB LABS " value="SIR ACB LABS"></a><br>
+        <a href="https://maps.app.goo.gl/rwMiWcA66rB28iqm8" target="_blank"><input type="button" name="DEGREE LABS " value="DEGREE LABS"></a><br><br><br><br><br><br>
+      </p>
+    </div>
+    <br><br><br>
+  </div>
+
+  <div id="GROUNDS">
+    <h2>GGU GROUNDS</h2>
+    <div class="pos_cen">
+      <img class="img_deg" src="https://img.freepik.com/premium-vector/outdoor-area-sport-activity-children-playground-basketball-court-game-leisure-kid-sandpit-swing-slide-field-street-public-play-courtyard-isometric-vector-illustration_345238-1569.jpg">
+      <p>
+        <a href="https://maps.app.goo.gl/qdeG2uwwNt4Jf2VF9" target="_blank"><input type="button" name="BUSES GROUND" value="BUSES GROUND"></a><br>
+        <a href="https://maps.app.goo.gl/zRFYhGDJcyXP3sLQ9" target="_blank"><input type="button" name="BASKETBALL COURT 1 " value="BASKETBALL COURT 1 "></a><br>
+        <a href="https://maps.app.goo.gl/73w5NUa1ejGzPoph8" target="_blank"><input type="button" name="BASKETBALL COURT 2 " value="BASKETBALL COURT 2 "></a><br>
+        <a href="https://maps.app.goo.gl/QWGPkYXWjHoHWpAU6" target="_blank"><input type="button" name="FOOTBALL COURT " value="FOOTBALL COURT"></a><br>
+         <a href="https://maps.app.goo.gl/qNAAtwoZwTBaiYGYA" target="_blank"><input type="button" name="VOLLEYBALL COURT " value="VOLLEYBALL COURT"></a><br>
+         <a href="https://maps.app.goo.gl/64ni1BpJzAFdWNFD8" target="_blank"><input type="button" name="KABBADI COURT " value="KABBADI COURT"></a><br>
+        <a href="https://maps.app.goo.gl/3t5TLnFwSYws6Sc8A" target="_blank"><input type="button" name="CRICKET GROUND" value=" CRICKET GROUND "></a><br>
+        <a href="https://maps.app.goo.gl/dx386tnSa3y3nAL29" target="_blank"><input type="button" name="MAHASABALU GROUND " value=" MAHASABALU GROUND "></a><br></br></br>
+</br></br></br></br></br></br>
+      </p>
+    </div>
+    <br><br><br>
+  </div>
+
+  <div id="FOOD_STALLS">
+    <h2>GGU FOOD STALLS</h2>
+    <div class="pos_cen">
+      <img class="img_deg" src="https://i.pinimg.com/736x/7d/e2/96/7de2969651970e389668dc824b12645d.jpg">
+      <p>
+        <a href="https://maps.app.goo.gl/WyCY9TRMUXvBoSqG8" target="_blank"><input type="button" name="VB BESIDE STALLS " value="VB BESIDE STALLS"></a><br>
+        <a href="https://maps.app.goo.gl/eghuu9Mh2ey8R5CD6" target="_blank"><input type="button" name=" FOOD COURT " value=" FOOD COURT "></a><br>
+        <a href="https://maps.app.goo.gl/UHqsyGbQMoyArGtb8" target="_blank"><input type="button" name=" YUMPPYS " value="YUMPPYS"></a><br>
+        <a href="https://maps.app.goo.gl/7HMD76ZX9eZkwQnK7" target="_blank"><input type="button" name="CENTRAL FOOD COURT" value=" CENTRAL FOOD COURT "></a><br>
+        <a href="https://maps.app.goo.gl/2XwRsmpEiwgjX1BU9" target="_blank"><input type="button" name="SPICE HUB" value=" SPICE HUB "></a><br>
+<br><br><br><br><br></br>
+      </p>
+    </div>
+    <br><br><br>
+  </div>
+
+     <div id="SEMINAR HALLS">
+    <h2>GGU SEMINAR HALLS</h2>
+    <div class="pos_cen">
+      <img class="img_deg" src="https://img.freepik.com/free-vector/empty-auditorium-lecture-hall-meeting-room_33099-1842.jpg?semt=ais_hybrid&w=740&q=80">
+      <p>
+        <a href="https://maps.app.goo.gl/uQ33BeerVfWrezMSA" target="_blank"><input type="button" name="VB BLOCK SEMINAR HALL  " value="VB BLOCK SEMINAR HALL "></a><br>
+        <a href="https://maps.app.goo.gl/xGARtJyQC4Egzfjf7" target="_blank"><input type="button" name=" PHARMACY BLOCK SEMINAR HALL  " value=" PHARMACY BLOCK SEMINAR HALL"></a><br>
+        <a href="https://maps.app.goo.gl/TJacBDasbUUDufD46" target="_blank"><input type="button" name=" RK BLOCK SEMINAR HALL  " value=" RK BLOCK SEMINAR HALL"></a><br>
+        <a href="https://maps.app.goo.gl/GBvNyoMCeb8ccUTx6" target="_blank"><input type="button" name="GEC BLOCK SEMINAR HALL " value=" GEC BLOCK SEMINAR HALL"></a><br>
+        <a href="https://maps.app.goo.gl/f4zqcqNd377LuC3u7" target="_blank"><input type="button" name="DEGREE BLOCK SEMINAR HALL " value="DEGREE BLOCK SEMINAR HALL "></a><br>
+<br><br><br><br><br>
+      </p>
+    </div>
+    <br><br><br>
+  </div>
+
+
+  <div id="GGU_ZONES">
+    <h2>ZONES</h2>
+    <div class="pos_cen">
+      <img class="img_deg" src="https://t4.ftcdn.net/jpg/10/98/10/37/360_F_1098103751_t2bpszj2aZ7gbdSpb1kI2b9P5T0pAiro.jpg">
+      <p>
+        <a href="https://maps.app.goo.gl/J7swjS28esAZRTfv7" target="_blank"><input type="button" name="ZONE 1" value=" ZONE 1 "></a><br>
+        <a href="https://maps.app.goo.gl/bwVTDbn3ahxmnRMp9" target="_blank"><input type="button" name="ZONE 2" value=" ZONE 2 "></a><br>
+        <a href="https://maps.app.goo.gl/D18N1S2nmgrsV54Q8" target="_blank"><input type="button" name="ZONE 3" value=" ZONE 3 "></a><br>
+        <a href="https://maps.app.goo.gl/snxzEBraoFdH458S6" target="_blank"><input type="button" name="ZONE 4" value=" ZONE 4 "></a><br>
+        <a href="https://maps.app.goo.gl/DqZUNfjjRJkpg7nc7" target="_blank"><input type="button" name="GLOBE " value=" GLOBE  "></a><br>
+        <a href="https://maps.app.goo.gl/NUvGQ7m8P7PZovuLA" target="_blank"><input type="button" name="PNB ATM " value="PNB ATM "></a><br>
+        <a href="https://maps.app.goo.gl/TYA7YLERH7sWN3wK6" target="_blank"><input type="button" name="GGU LIBRARY" value=" GGU LIBRARY "></a><br>
+        <a href="https://maps.app.goo.gl/nsvgAbAoy1gbdkdd8" target="_blank"><input type="button" name="AMPHI THEATRE " value=" AMPHI THEATRE "></a><br>
+        <a href="https://maps.app.goo.gl/ntZLscKtNgKLNmyJ8" target="_blank"><input type="button" name=" LAKE POND " value=" LAKE POND "></a><br>
+        <a href="https://maps.app.goo.gl/7Lva42S5G5Wjg7ci8" target="_blank"><input type="button" name="BAMBOOS SPOT" value="BAMBOOS SPOT"></a><br>
+        <a href="https://maps.app.goo.gl/gyjMj2WAN8vskFRk8" target="_blank"><input type="button" name="BOYS HOSTELS " value="BOYS HOSTELS"></a><br>
+        <a href="https://maps.app.goo.gl/kcaEXALM4bQz8apZ6" target="_blank"><input type="button" name="GIRLS HOSTELS" value="GIRLS HOSTELS"></a><br>
+        <a href="https://maps.app.goo.gl/YkyHPU22MyrafBoZ9" target="_blank"><input type="button" name="NRL HOSTELS" value="NRI HOSTELS"></a><br>
+        <a href="https://maps.app.goo.gl/YMpAiPtxCbPnsxMH9" target="_blank"><input type="button" name="SOUTH MESS" value="SOUTH MESS"></a><br>
+        <a href="https://maps.app.goo.gl/R4uDZW2uXUk1viq26" target="_blank"><input type="button" name="NORTH MESS" value="NORTH MESS"></a><br>
+        <a href="https://maps.app.goo.gl/57mm2dLiRJioa6se9" target="_blank"><input type="button" name="MEDUNITED CLINIC" value="MEDUNITED CLINIC"></a><br>
+        <a href="https://maps.app.goo.gl/PA4vihvhomKZcWa16" target="_blank"><input type="button" name="SAI BABA TEMPLE" value=" SAI BABA TEMPLE "></a><br>
+        <a href="https://maps.app.goo.gl/Ub8iMyAVCHpQzHTUA" target="_blank"><input type="button" name="SARASWATHIDEVI TEMPLE" value=" SARASWATHIDEVI TEMPLE "></a><br>   
+        <a href="https://maps.app.goo.gl/oQKSopAgfzb51dW79" target="_blank"><input type="button" name="XEROX/STATIONARY STORE" value="XEROX/STATIONARY STORE"></a><br>
+                
+
+      </p>
+    </div>
+    <br><br><br>
+  </div>
+
+  <div id="PARKING">
+    <h2>GGU PARKING</h2>
+    <div class="pos_cen">
+      <img class="img_deg" src="https://deorwineblog.b-cdn.net/uploads/2021/07/car-parking-banner.jpg">
+      <p>
+         <a href="https://maps.app.goo.gl/zt1bzzYAspM1Drt28" target="_blank"><input type="button" name="PARKING AT MAIN GATE" value=" PARKING AT MAIN GATE "></a><br>
+        <a href="https://maps.app.goo.gl/24XBKze8LbbiAtw29" target="_blank"><input type="button" name="PARKING AT BAMBOO" value=" PARKING AT BAMBOO "></a><br>
+        <a href="https://maps.app.goo.gl/tgzs3iU5otwYCRe99" target="_blank"><input type="button" name="PARKING AT RK BLOCK" value=" PARKING AT RK BLOCK "></a><br>
+        <a href="https://maps.app.goo.gl/j3KisW9a9iCwerhm8" target="_blank"><input type="button" name="PARKING AT GEC" value=" PARKING AT GEC "></a><br><br><br><br></br></br>
+      </p>
+    </div>
+    <br><br><br>
+
+  <div id="CONTACT US">
+    <h2>CONTACT US</h2>
+    <div class="pos_cen">
+    <img class="img_deg" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRr1vZOeYHcFP-80R8-NExOwBp3LW8mQ3R3JAQFkMhXDtEPCkcul1dnOHmI2KAh6ow9Jg&usqp=CAU">
+     <p><b>
+      MAIL: info@ggu.edu.in<br>
+      MOBILE: +91 994999 3483<br>
+      LOCATION: Godavari Global University,
+      NH16, Chaitanya Knowledge City, Rajahmundry,</br> Andhra Pradesh, INDIA. PIN: 533296<br>
+      Corporate Office: Hyderabad, Telangana
+      <br><br><br><br><br><br><br>
+      </b></p>
+    </div>
+  </div>
+
+<footer>
+  <b>MADE BY SAIKIRAN.CHAPA STUDENT OF GIET-A 3RD YEAR ECE!</b>
+</footer>
+<br><br><br>
+</body>
+</html>
